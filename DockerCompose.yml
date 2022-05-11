@@ -1,0 +1,34 @@
+version: '3.0'
+services:
+  app:
+    container_name: college_app
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    ports:
+      - "8080:8080"
+    links:
+      - postgresqldb
+    depends_on:
+      - postgresqldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresqldb:5432/academy
+      - SPRING_DATASOURCE_USERNAME=ilya
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+  postgresqldb:
+    container_name: postgres-db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "academy"
+      POSTGRES_USER: "ilya"
+      POSTGRES_PASSWORD: "postgres"
+    restart: always
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
