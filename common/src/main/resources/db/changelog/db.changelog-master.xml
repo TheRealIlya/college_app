@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="db/changelog/2022/05/11/01-changelog-create-type-role-types.xml"/>
+    
+    <include file="db/changelog/2022/05/11/02-changelog-create-tables.xml"/>
+
+    <include file="db/changelog/2022/05/11/03-changelog-fill-tables.xml"/>
+
+</databaseChangeLog>

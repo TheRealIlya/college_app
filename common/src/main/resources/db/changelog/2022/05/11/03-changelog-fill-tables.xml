@@ -1,0 +1,173 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="fill-table-roles" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM roles
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into roles (id, title) values
+            (0, 'ROLE_ADMIN'),
+            (1, 'ROLE_TEACHER'),
+            (2, 'ROLE_STUDENT')
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-users" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM users
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into users (login, password, name, age, role_id) values
+            ('Admin', '$2a$12$w97rat/hqJrTepoUPdvCTe6ie/9kCP1aR6tgfX4OglUeTVDJTOw2y', 'Ilya', 25, 0),
+            ('Mike_', '$2a$12$xn/DKjQ64h8CrX2cmjFFV./JWRwsS9dNnzJyA6FcIpyrmCZ.mhhf6', 'Mike', 35, 1),
+            ('Stud', '$2a$12$9HYeeJzxrVC2/ijtanwdBeBqX5tsp64IMmEKtwoHPJWnjRIz0MpYi', 'Dan', 20, 2),
+            ('Mike_2', '$2a$12$w97rat/hqJrTepoUPdvCTe6ie/9kCP1aR6tgfX4OglUeTVDJTOw2y', 'M2', 99, 1),
+            ('Boris', '$2a$12$9HYeeJzxrVC2/ijtanwdBeBqX5tsp64IMmEKtwoHPJWnjRIz0MpYi', 'Borya', 18, 2),
+            ('Alex', '$2a$12$w97rat/hqJrTepoUPdvCTe6ie/9kCP1aR6tgfX4OglUeTVDJTOw2y', 'Alex', 35, 1)
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-group_s" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM group_s
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into group_s (title, teacher_id) values
+            ('11 A', 2),
+            ('11 B', 6)
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-theme" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM theme
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into theme (title) values
+            ('Math'),
+            ('English'),
+            ('Java')
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-grade" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM grade
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into grade (value, student_id, group_id, theme_id) values
+            (3, 3, 1, 1),
+            (1, 3, 1, 1),
+            (2, 3, 1, 1),
+            (4, 3, 1, 1),
+            (9, 3, 1, 2),
+            (4, 3, 1, 2),
+            (9, 5, 2, 3),
+            (4, 5, 2, 3),
+            (7, 5, 2, 2),
+            (10, 5, 1, 1),
+            (8, 5, 1, 1),
+            (4, 5, 1, 2),
+            (2, 5, 2, 2),
+            (4, 5, 1, 1)
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-salary" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM salary
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into salary (salaries_key, value, teacher_id) values
+            (1, 5, 2),
+            (2, 5, 2),
+            (3, 5, 2),
+            (4, 5, 2),
+            (5, 5, 2),
+            (6, 5, 2),
+            (7, 5, 2),
+            (8, 5, 2),
+            (9, 5, 2),
+            (10, 5, 2),
+            (11, 5, 2),
+            (12, 5, 2),
+            (1, 7, 4),
+            (2, 7, 4),
+            (3, 7, 4),
+            (4, 7, 4),
+            (5, 7, 4),
+            (6, 7, 4),
+            (7, 7, 4),
+            (8, 7, 4),
+            (9, 7, 4),
+            (10, 7, 4),
+            (11, 7, 4),
+            (12, 7, 4),
+            (1, 14, 6),
+            (2, 14, 6),
+            (3, 14, 6),
+            (4, 14, 6),
+            (5, 14, 6),
+            (6, 14, 6),
+            (7, 14, 6),
+            (8, 14, 6),
+            (9, 14, 6),
+            (10, 14, 6),
+            (11, 14, 6),
+            (12, 14, 6)
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-group_student" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM group_student
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into group_student (group_id, student_id) values
+            (1, 3),
+            (1, 5),
+            (2, 5)
+            ;
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill-table-group_theme" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(1) FROM group_theme
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            insert into group_theme (group_id, theme_id) values
+            (1, 1),
+            (1, 2),
+            (2, 2),
+            (2, 3)
+            ;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

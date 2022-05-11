@@ -1,0 +1,159 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create-table-roles" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="roles"/>
+            </not>
+        </preConditions>
+        <createTable tableName="roles">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="role_types"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-users" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="login" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="integer"/>
+            <column name="role_id" type="integer">
+                <constraints foreignKeyName="users_role_id_roles_id" references="roles(id)"/>
+            </column>
+            <column name="enabled" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-group_s" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="group_s"/>
+            </not>
+        </preConditions>
+        <createTable tableName="group_s">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="teacher_id" type="integer">
+                <constraints foreignKeyName="group_s_teacher_id_users_id" references="users(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-theme" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="theme"/>
+            </not>
+        </preConditions>
+        <createTable tableName="theme">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-grade" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="grade"/>
+            </not>
+        </preConditions>
+        <createTable tableName="grade">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="value" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_id" type="integer">
+                <constraints foreignKeyName="grade_student_id_users_id" references="users(id)"/>
+            </column>
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="grade_group_id_group_s_id" references="group_s(id)"/>
+            </column>
+            <column name="theme_id" type="integer">
+                <constraints foreignKeyName="grade_theme_id_theme_id" references="theme(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-salary" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="salary"/>
+            </not>
+        </preConditions>
+        <createTable tableName="salary">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="salaries_key" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="real">
+                <constraints nullable="false"/>
+            </column>
+            <column name="teacher_id" type="integer">
+                <constraints foreignKeyName="salary_teacher_id_users_id" references="users(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-group_student" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="group_student"/>
+            </not>
+        </preConditions>
+        <createTable tableName="group_student">
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="group_student_group_id_group_s_id" references="group_s(id)"/>
+            </column>
+            <column name="student_id" type="integer">
+                <constraints foreignKeyName="group_student_student_id_group_s_id" references="users(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-group_theme" author="Ilya Vialiki">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="group_theme"/>
+            </not>
+        </preConditions>
+        <createTable tableName="group_theme">
+            <column name="group_id" type="integer">
+                <constraints foreignKeyName="group_theme_group_id_group_s_id" references="group_s(id)"/>
+            </column>
+            <column name="theme_id" type="integer">
+                <constraints foreignKeyName="group_theme_theme_id_theme_id" references="theme(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

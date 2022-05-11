@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/academy
+    username: ilya
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    sql: debug
+#    root: info
