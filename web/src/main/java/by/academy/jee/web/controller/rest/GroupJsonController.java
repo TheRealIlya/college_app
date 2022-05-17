@@ -1,11 +1,13 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.exception.ServiceException;
+import by.academy.jee.dto.group.GroupDtoRequest;
+import by.academy.jee.dto.group.GroupDtoResponse;
+import by.academy.jee.mapper.GroupDtoMapper;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.web.service.Service;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,67 +17,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static by.academy.jee.constant.ControllerConstant.APPLICATION_JSON;
-import static by.academy.jee.constant.ExceptionConstant.GROUP_UPDATE_ERROR;
-
-@Slf4j
 @RestController
+@Validated
 @RequiredArgsConstructor
-@RequestMapping(value = "/rest/groups", produces = APPLICATION_JSON)
+@RequestMapping(value = "/rest/groups")
 public class GroupJsonController {
 
     private final Service service;
+    private final GroupDtoMapper groupDtoMapper;
 
     @GetMapping
-    public List<Group> getAllGroups() {
-        return service.getAllGroups();
+    public List<GroupDtoResponse> getAllGroups() {
+        return groupDtoMapper.mapModelListToDtoList(service.getAllGroups());
     }
 
     @GetMapping(value = "/{title}")
-    public ResponseEntity<Group> getGroup(@PathVariable String title) {
-        try {
-            return ResponseEntity.ok(service.getGroup(title));
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<GroupDtoResponse> getGroup(@PathVariable @NotNull String title) {
+        return ResponseEntity.ok(groupDtoMapper.mapModelToDto(service.getGroup(title)));
     }
 
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Group group) {
-        try {
-            return ResponseEntity.ok(service.createGroup(group));
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<GroupDtoResponse> createGroup(@Valid @RequestBody GroupDtoRequest groupDtoRequest) {
+        Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
+        return ResponseEntity.ok(groupDtoMapper.mapModelToDto(service.createGroup(group)));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateGroup(@RequestBody Group group, @PathVariable int id) {
-        try {
-            if (group != null && group.getId() == id) {
-                return ResponseEntity.ok(service.updateGroup(group));
-            } else {
-                log.error(GROUP_UPDATE_ERROR);
-                return ResponseEntity.badRequest().body(GROUP_UPDATE_ERROR);
-            }
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<GroupDtoResponse> updateGroup(@Valid @RequestBody GroupDtoRequest groupDtoRequest,
+                                                        @PathVariable @Min(1) int id) {
+        Group group = groupDtoMapper.mapDtoToModel(groupDtoRequest);
+        return ResponseEntity.ok(groupDtoMapper.mapModelToDto(service.updateGroup(group, id)));
     }
 
     @DeleteMapping(value = "/{title}")
-    public ResponseEntity<?> deleteGroup(@PathVariable String title) {
-        try {
-            Group group = service.getGroup(title);
-            return ResponseEntity.ok(service.removeGroup(group));
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<GroupDtoResponse> deleteGroup(@PathVariable @NotNull String title) {
+        Group group = service.getGroup(title);
+        return ResponseEntity.ok(groupDtoMapper.mapModelToDto(service.removeGroup(group)));
     }
 }

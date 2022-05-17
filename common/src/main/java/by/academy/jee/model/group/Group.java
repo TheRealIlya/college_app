@@ -6,8 +6,9 @@ import by.academy.jee.model.person.Student;
 import by.academy.jee.model.person.Teacher;
 import by.academy.jee.model.theme.Theme;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -21,9 +22,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
-import java.util.Objects;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "group_s")
@@ -36,7 +37,7 @@ public class Group extends AbstractEntity {
 
     @Fetch(FetchMode.JOIN)
     @ManyToMany(mappedBy = "groups", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REFRESH}, fetch = FetchType.EAGER)
+            CascadeType.REFRESH})
     private List<Student> students;
 
     @Fetch(FetchMode.SUBSELECT)
@@ -48,27 +49,19 @@ public class Group extends AbstractEntity {
     )
     private List<Theme> themes;
 
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "group", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REFRESH}, fetch = FetchType.LAZY)
+            CascadeType.REFRESH})
     @JsonIgnore
     private List<Grade> grades;
 
     @Override
-    public String toString() {
-        return title + "(themes - " + themes + ")";
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equals(getId(), group.getId());
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return super.hashCode();
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class UserPrincipal implements UserDetails {
 
-    private final Person person;
+    private final transient Person person;
     private final Collection<SimpleGrantedAuthority> authorities;
 
     public UserPrincipal(Person person) {

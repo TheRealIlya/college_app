@@ -1,26 +1,25 @@
 package by.academy.jee.model.person;
 
 import by.academy.jee.model.person.role.Role;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.persistence.Table;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
-@SecondaryTable(name = "roles", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
+@DiscriminatorValue("1")
 public class Teacher extends Person {
 
     @Fetch(FetchMode.JOIN)
@@ -31,16 +30,6 @@ public class Teacher extends Person {
 
     public Teacher() {
         setRole(Role.ROLE_TEACHER);
-    }
-
-    public Teacher withLogin(String login) {
-        setLogin(login);
-        return this;
-    }
-
-    public Teacher withSalaries(Map<Integer, Double> salaries) {
-        setSalaries(salaries);
-        return this;
     }
 
     public void setSalaries(Map<Integer, Double> salaries) {

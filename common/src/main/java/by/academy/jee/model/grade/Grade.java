@@ -4,9 +4,10 @@ import by.academy.jee.model.AbstractEntity;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -14,7 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Grade extends AbstractEntity {
@@ -40,7 +42,12 @@ public class Grade extends AbstractEntity {
     private Theme theme;
 
     @Override
-    public String toString() {
-        return String.valueOf(value);
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -1,12 +1,13 @@
 package by.academy.jee.web.controller.rest;
 
-import by.academy.jee.exception.ServiceException;
+import by.academy.jee.dto.person.PersonDtoRequest;
+import by.academy.jee.dto.person.PersonDtoResponse;
+import by.academy.jee.mapper.PersonDtoMapper;
 import by.academy.jee.model.person.Person;
-import by.academy.jee.model.person.PersonDto;
 import by.academy.jee.web.service.Service;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,70 +17,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static by.academy.jee.constant.ControllerConstant.APPLICATION_JSON;
-import static by.academy.jee.constant.ExceptionConstant.PERSON_UPDATE_ERROR;
-
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/rest/persons", produces = APPLICATION_JSON)
+@Validated
+@RequestMapping(value = "/rest/persons")
 public class PersonJsonController {
 
     private final Service service;
+    private final PersonDtoMapper personDtoMapper;
 
     @GetMapping
-    public List<Person> getAllPersons() {
-        return service.getAllPersons();
+    public List<PersonDtoResponse> getAllPersons() {
+        return personDtoMapper.mapModelListToDtoList(service.getAllPersons());
     }
 
     @GetMapping(value = "/{login}")
-    public ResponseEntity<Person> getPerson(@PathVariable String login) {
-        try {
-            Person person = service.getUserIfExist(login);
-            return ResponseEntity.ok(person);
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PersonDtoResponse> getPerson(@PathVariable @NotNull String login) {
+        Person person = service.getPerson(login);
+        return ResponseEntity.ok(personDtoMapper.mapModelToDto(person));
     }
 
     @PostMapping
-    public ResponseEntity<?> createPerson(@RequestBody PersonDto personDto) {
-        try {
-            Person person = service.getPersonFromDto(personDto);
-            return ResponseEntity.ok(service.createPerson(person));
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PersonDtoResponse> createPerson(@Valid @RequestBody PersonDtoRequest personDtoRequest) {
+        Person person = personDtoMapper.mapDtoToModel(personDtoRequest);
+        return ResponseEntity.ok(personDtoMapper.mapModelToDto(service.createPerson(person)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePerson(@RequestBody PersonDto personDto, @PathVariable int id) {
-        try {
-            if (personDto != null && personDto.getId() == id) {
-                Person person = service.getPersonFromDto(personDto);
-                return ResponseEntity.ok(service.updatePerson(person));
-            } else {
-                log.error(PERSON_UPDATE_ERROR);
-                return ResponseEntity.badRequest().body(PERSON_UPDATE_ERROR);
-            }
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PersonDtoResponse> updatePerson(@Valid @RequestBody PersonDtoRequest personDtoRequest,
+                                                          @PathVariable @Min(1) int id) {
+        Person person = personDtoMapper.mapDtoToModel(personDtoRequest);
+        return ResponseEntity.ok(personDtoMapper.mapModelToDto(service.updatePerson(person, id)));
     }
 
     @DeleteMapping(value = "/{login}")
-    public ResponseEntity<?> deletePerson(@PathVariable String login) {
-        try {
-            Person person = service.getUserIfExist(login);
-            return ResponseEntity.ok(service.removeUser(person));
-        } catch (ServiceException e) {
-            log.error(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<PersonDtoResponse> deletePerson(@PathVariable @NotNull String login) {
+        Person person = service.getPerson(login);
+        return ResponseEntity.ok(personDtoMapper.mapModelToDto(service.removePerson(person)));
     }
 }

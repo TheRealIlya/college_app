@@ -4,26 +4,25 @@ import by.academy.jee.model.grade.Grade;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.model.person.role.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.persistence.Table;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
-@SecondaryTable(name = "roles", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
+@DiscriminatorValue("2")
 public class Student extends Person {
     @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
@@ -43,16 +42,6 @@ public class Student extends Person {
 
     public Student() {
         setRole(Role.ROLE_STUDENT);
-    }
-
-    public Student withLogin(String login) {
-        setLogin(login);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return getLogin();
     }
 
     @Override
