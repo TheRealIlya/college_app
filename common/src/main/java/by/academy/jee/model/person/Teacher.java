@@ -48,15 +48,6 @@ public class Teacher extends Person {
     }
 
     @Override
-    public String toString() {
-        String mapString = "";
-        for (int i = 1; i < 13; i++) {
-            mapString += "<br>" + i + " - " + String.format("%.2f", salaries.get(i)).replace(',', '.');
-        }
-        return super.toString() + "<br><br> Salaries:" + mapString;
-    }
-
-    @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }

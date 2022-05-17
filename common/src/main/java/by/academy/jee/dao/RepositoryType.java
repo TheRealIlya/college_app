@@ -30,7 +30,7 @@ public enum RepositoryType {
     }
 
     private static Map<RepositoryType, String> initEnumToValue() {
-        Map<RepositoryType, String> map = new EnumMap<RepositoryType, String>(RepositoryType.class);
+        Map<RepositoryType, String> map = new EnumMap<>(RepositoryType.class);
         for (RepositoryType element : RepositoryType.values()) {
             map.put(element, element.type);
         }

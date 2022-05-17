@@ -38,6 +38,7 @@ public class Admin extends Person {
         return this;
     }
 
+    @Override
     public String toString() {
         return super.toString();
     }
