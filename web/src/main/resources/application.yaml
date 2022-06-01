@@ -19,4 +19,5 @@ spring:
 logging:
   level:
     sql: debug
-#    root: info
+
+jwt.secret: some_secret

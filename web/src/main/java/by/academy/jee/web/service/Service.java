@@ -11,8 +11,8 @@ import by.academy.jee.model.group.Group;
 import by.academy.jee.model.person.Person;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
-import by.academy.jee.web.util.PasswordHasher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,7 +27,8 @@ public class Service {
     private static final String BAD_REQUEST_UPDATE_GRADE = "Bad request - grade is null or id not equals to grade.id";
     private static final String BAD_REQUEST_UPDATE_PERSON =
             "Bad request - person is null or id not equals to person.id";
-    private final PasswordHasher passwordHasher;
+
+    private final PasswordEncoder passwordEncoder;
     private final GroupDao groupDao;
     private final ThemeDao themeDao;
     private final GradeDao gradeDao;
@@ -145,6 +146,6 @@ public class Service {
     }
 
     private void encryptPasswordForPerson(Person person) {
-        person.setPassword(passwordHasher.getEncryptedPassword(person.getPassword()));
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
     }
 }

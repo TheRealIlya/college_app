@@ -12,9 +12,9 @@ import by.academy.jee.model.person.Admin;
 import by.academy.jee.model.person.Person;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
-import by.academy.jee.web.util.PasswordHasher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +32,12 @@ import static org.mockito.Mockito.when;
 
 class ServiceTest {
 
-    private final PasswordHasher passwordHasher = mock(PasswordHasher.class);
+    private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final GroupDao groupDao = mock(GroupDao.class);
     private final ThemeDao themeDao = mock(ThemeDao.class);
     private final GradeDao gradeDao = mock(GradeDao.class);
     private final PersonDao personDao = mock(PersonDao.class);
-    private final Service service = new Service(passwordHasher, groupDao, themeDao, gradeDao, personDao);
+    private final Service service = new Service(passwordEncoder, groupDao, themeDao, gradeDao, personDao);
 
     @AfterEach
     void clearMocks() {
@@ -49,7 +49,7 @@ class ServiceTest {
         Person expected = new Admin();
         expected.setLogin("New Login");
         expected.setPassword("Some password");
-        when(passwordHasher.getEncryptedPassword(expected.getPassword())).thenReturn(expected.getPassword());
+        when(passwordEncoder.encode(expected.getPassword())).thenReturn(expected.getPassword());
         when(personDao.save(expected)).thenReturn(expected);
         Person actual = service.createPerson(expected);
         assertEquals(expected, actual);
@@ -233,7 +233,7 @@ class ServiceTest {
     }
 
     private Person updatePerson(Person person, int id) {
-        when(passwordHasher.getEncryptedPassword(person.getPassword())).thenReturn(person.getPassword());
+        when(passwordEncoder.encode(person.getPassword())).thenReturn(person.getPassword());
         when(personDao.save(person)).thenReturn(person);
         return service.updatePerson(person, id);
     }

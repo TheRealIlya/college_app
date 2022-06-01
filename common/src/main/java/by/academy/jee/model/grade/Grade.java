@@ -4,7 +4,6 @@ import by.academy.jee.model.AbstractEntity;
 import by.academy.jee.model.group.Group;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.theme.Theme;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,19 +24,16 @@ public class Grade extends AbstractEntity {
 
     @Fetch(FetchMode.JOIN)
     @ManyToOne
-    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Fetch(FetchMode.JOIN)
     @ManyToOne
-    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "group_id")
     private Group group;
 
     @Fetch(FetchMode.JOIN)
     @ManyToOne
-    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "theme_id")
     private Theme theme;
 

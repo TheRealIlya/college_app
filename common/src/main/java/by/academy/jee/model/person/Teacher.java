@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class Teacher extends Person {
 
     @Fetch(FetchMode.JOIN)
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "salary", joinColumns = @JoinColumn(name = "teacher_id"))
     @Column(name = "value")
     private Map<Integer, Double> salaries = new HashMap<>();

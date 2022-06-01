@@ -12,9 +12,7 @@ import javax.validation.ConstraintViolationException;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler({ConstraintViolationException.class,
-            DataAccessException.class,
-            ServiceException.class})
+    @ExceptionHandler({ConstraintViolationException.class, DataAccessException.class, ServiceException.class})
     public ResponseEntity<String> handleBadRequestExceptions(Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }

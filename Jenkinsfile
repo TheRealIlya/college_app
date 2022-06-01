@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clean previous version') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     sh 'mvn clean'
                     sh 'docker rm -f postgres-db'
                     sh 'docker rm -f college_app'

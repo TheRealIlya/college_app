@@ -45,6 +45,7 @@ public class PersonDtoMapper implements GenericMapper<PersonDtoRequest, PersonDt
                     personDtoResponseList.add(teacherDtoMapper.mapModelToDto((Teacher) model));
                     break;
                 case ROLE_STUDENT:
+                default:
                     personDtoResponseList.add(studentDtoMapper.mapModelToDto((Student) model));
             }
         }

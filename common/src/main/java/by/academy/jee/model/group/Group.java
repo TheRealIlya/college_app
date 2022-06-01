@@ -5,7 +5,6 @@ import by.academy.jee.model.grade.Grade;
 import by.academy.jee.model.person.Student;
 import by.academy.jee.model.person.Teacher;
 import by.academy.jee.model.theme.Theme;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -35,13 +33,13 @@ public class Group extends AbstractEntity {
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Teacher teacher;
 
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(mappedBy = "groups", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH})
     private List<Student> students;
 
     @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "group_theme",
             joinColumns = @JoinColumn(name = "group_id"),
@@ -49,10 +47,9 @@ public class Group extends AbstractEntity {
     )
     private List<Theme> themes;
 
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "group", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH})
-    @JsonIgnore
     private List<Grade> grades;
 
     @Override
